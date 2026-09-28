@@ -1,0 +1,6 @@
+@model UserMessage
+@{ ViewData["Title"] = Model.Subject; var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value; var incoming = Model.RecipientId == currentUserId; }
+
+<div class="d-flex justify-content-between align-items-center mb-3"><h1>@Model.Subject</h1><a asp-action="Index" class="btn btn-outline-secondary">Back to inbox</a></div>
+<article class="card"><div class="card-body"><p class="mb-1"><strong>@(incoming ? "From" : "To"):</strong> @(incoming ? Model.Sender.FirstName + " " + Model.Sender.LastName : Model.Recipient.FirstName + " " + Model.Recipient.LastName)</p><p class="small text-muted">@Model.SentAt.ToLocalTime().ToString("dddd, dd MMMM yyyy HH:mm")</p><hr /><p class="preserve-lines">@Model.Body</p></div></article>
+@if (incoming) { <a class="btn btn-danger mt-3" asp-action="Compose" asp-route-recipientId="@Model.SenderId" asp-route-subject="Re: @Model.Subject">Reply</a> }

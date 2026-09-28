@@ -1,0 +1,19 @@
+@model List<Booking>
+@{ ViewData["Title"] = "My trips"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3"><h1>My trips</h1><a class="btn btn-outline-danger" asp-controller="Home" asp-action="Index">Explore stays</a></div>
+@if (!Model.Any()) { <div class="empty-state">You do not have any bookings yet. <a asp-controller="Home" asp-action="Index">Start exploring.</a></div> }
+else
+{
+    <div class="table-responsive"><table class="table align-middle"><thead><tr><th>Property</th><th>Dates</th><th>Travelers</th><th>Total</th><th>Status</th><th>Check-in</th></tr></thead><tbody>
+    @foreach (var booking in Model)
+    {
+        var hasPendingDocument = booking.GuestDocuments.Any(d => d.Status == GuestDocumentStatus.Pending);
+        <tr><td><strong>@booking.Property.Title</strong><br /><small>@booking.Property.City</small></td><td>@booking.CheckInDate.ToString("dd MMM yyyy") – @booking.CheckOutDate.ToString("dd MMM yyyy")</td><td>@booking.TravelerCount</td><td>@booking.TotalPrice.ToString("C")</td><td><span class="badge text-bg-secondary">@booking.Status</span></td><td>
+            @if (booking.Status == BookingStatus.Approved && !hasPendingDocument) { <a class="btn btn-sm btn-danger" asp-action="CheckIn" asp-route-bookingId="@booking.Id">Upload document</a> }
+            else if (hasPendingDocument) { <span class="small text-muted">Awaiting verification</span> }
+            else if (booking.Status == BookingStatus.CheckedIn) { <span class="text-success">Complete</span> }
+        </td></tr>
+    }
+    </tbody></table></div>
+}

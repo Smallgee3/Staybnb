@@ -1,0 +1,16 @@
+@model GuestCheckInInputModel
+@{ ViewData["Title"] = "Guest check-in"; }
+
+<div class="row justify-content-center"><div class="col-lg-8">
+    <h1>Complete check-in</h1>
+    <p class="lead">@Model.PropertyTitle</p>
+    <div class="alert alert-info"><strong>Host requirements:</strong> @Model.RequiredDocuments<br />@if (!string.IsNullOrWhiteSpace(Model.Instructions)) { <span class="preserve-lines">@Model.Instructions</span> }</div>
+    <form asp-action="CheckIn" method="post" enctype="multipart/form-data" class="card card-body">
+        <input asp-for="BookingId" type="hidden" /><input asp-for="PropertyTitle" type="hidden" /><input asp-for="Instructions" type="hidden" /><input asp-for="RequiredDocuments" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="mb-3"><label asp-for="DocumentType" class="form-label"></label><select asp-for="DocumentType" asp-items="Html.GetEnumSelectList<DocumentType>()" class="form-select"></select></div>
+        <div class="mb-3"><label asp-for="Document" class="form-label"></label><input asp-for="Document" type="file" class="form-control" accept="image/jpeg,image/png,application/pdf" /><div class="form-text">JPG, PNG, or PDF; maximum 5 MB.</div><span asp-validation-for="Document" class="text-danger"></span></div>
+        <button class="btn btn-danger" type="submit">Submit for host verification</button>
+    </form>
+</div></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

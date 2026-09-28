@@ -1,0 +1,9 @@
+@model AdminDashboardViewModel
+@{ ViewData["Title"] = "Admin centre"; }
+
+<h1>Admin command centre</h1>
+<div class="row g-3 mb-4"><div class="col-md-4"><div class="metric-card"><span>Pending host applications</span><strong>@Model.PendingApplications</strong><a asp-action="Applications">Review applications</a></div></div><div class="col-md-4"><div class="metric-card"><span>Pending booking requests</span><strong>@Model.PendingBookings</strong><a asp-controller="Host" asp-action="Bookings">Host view</a></div></div><div class="col-md-4"><div class="metric-card"><span>Registered users</span><strong>@Model.RegisteredUsers</strong>@if (User.IsInRole(Roles.SuperAdmin)) { <a asp-action="UserManagement">Manage users</a> }</div></div></div>
+<div class="d-flex gap-2 mb-3"><a class="btn btn-danger" asp-action="Applications">Application review</a><a class="btn btn-outline-secondary" asp-action="Logs">System audit log</a>@if (User.IsInRole(Roles.SuperAdmin)) { <a class="btn btn-outline-danger" asp-action="UserManagement">User management</a> }</div>
+<h2 class="h4 mt-4">Recent activity</h2>
+@if (!Model.RecentActivities.Any()) { <p class="text-muted">No activity has been logged yet.</p> }
+else { <div class="table-responsive"><table class="table"><thead><tr><th>When</th><th>Action</th><th>User</th><th>Details</th></tr></thead><tbody>@foreach (var log in Model.RecentActivities) { <tr><td>@log.CreatedAt.ToLocalTime().ToString("dd MMM yyyy HH:mm")</td><td>@log.Action</td><td>@log.UserEmail</td><td>@log.Details</td></tr> }</tbody></table></div> }

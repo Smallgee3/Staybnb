@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] | Staybnb</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Staybnb.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-danger" asp-controller="Home" asp-action="Index">staybnb</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Explore</a></li>
+                        @if (User.IsInRole(Roles.Guest))
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Guest" asp-action="Dashboard">My trips</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Hosting" asp-action="Apply">Become a Host</a></li>
+                        }
+                        @if (User.IsInRole(Roles.Host))
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Host" asp-action="Dashboard">Host dashboard</a></li>
+                        }
+                        @if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.SuperAdmin))
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="Dashboard">Admin centre</a></li>
+                        }
+                    </ul>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a class="btn btn-sm btn-outline-secondary me-2" asp-controller="Messages" asp-action="Index">Messages</a>
+                        <a class="btn btn-sm btn-outline-danger me-2" asp-controller="Notifications" asp-action="Index">Notifications</a>
+                    }
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="container py-4">
+        @if (TempData["Success"] is string success) { <div class="alert alert-success alert-dismissible fade show" role="alert">@success<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div> }
+        @if (TempData["Error"] is string error) { <div class="alert alert-danger alert-dismissible fade show" role="alert">@error<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div> }
+        @if (TempData["Info"] is string info) { <div class="alert alert-info" role="alert">@info</div> }
+        @RenderBody()
+    </main>
+    <footer class="border-top footer text-muted py-5 mt-5">
+        <div class="container"><small>&copy; 2026 Staybnb. Managed rental ecosystem coursework project.</small></div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

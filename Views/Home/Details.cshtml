@@ -1,0 +1,37 @@
+@model HostProperty
+@{
+    ViewData["Title"] = Model.Title;
+    var primaryImage = Model.PropertyImages.OrderBy(i => i.SortOrder).FirstOrDefault()?.ImageUrl ?? "https://placehold.co/1200x700?text=Staybnb";
+    var averageRating = Model.Reviews.Any() ? Model.Reviews.Average(r => r.Rating).ToString("0.0") : "New";
+}
+
+<div class="mb-3"><a asp-action="Index" class="text-decoration-none">← Back to explore</a></div>
+<h1 class="h2">@Model.Title</h1>
+<p class="text-muted">@Model.City · @Model.PropertyType · Hosted by @Model.Host.FirstName @Model.Host.LastName · ★ @averageRating</p>
+<div class="row g-4">
+    <div class="col-lg-8">
+        <img class="detail-image mb-3" src="@primaryImage" alt="@Model.Title" />
+        @if (Model.PropertyImages.Count > 1)
+        {
+            <div class="row g-2 mb-4">
+            @foreach (var image in Model.PropertyImages.OrderBy(i => i.SortOrder).Skip(1))
+            { <div class="col-4"><img class="gallery-thumb" src="@image.ImageUrl" alt="Property image" /></div> }
+            </div>
+        }
+        <h2 class="h4">About this stay</h2><p class="preserve-lines">@Model.Description</p>
+        <h2 class="h4 mt-4">Amenities</h2>
+        @if (Model.PropertyAmenities.Any()) { <ul>@foreach (var item in Model.PropertyAmenities) { <li>@item.Amenity.Name</li> }</ul> } else { <p class="text-muted">Amenities have not yet been added.</p> }
+        <h2 class="h4 mt-4">Guest reviews</h2>
+        @if (!Model.Reviews.Any()) { <p class="text-muted">This is a new listing with no reviews yet.</p> }
+        @foreach (var review in Model.Reviews.OrderByDescending(r => r.CreatedAt)) { <article class="border-top py-3"><strong>@review.Reviewer.FirstName · ★ @review.Rating</strong><p class="mb-0">@review.Comment</p></article> }
+    </div>
+    <aside class="col-lg-4">
+        <div class="card booking-card shadow-sm"><div class="card-body">
+            <h2 class="h4"><strong>@Model.PricePerNight.ToString("C")</strong> night</h2>
+            <p class="small text-muted">Cleaning fee: @Model.CleaningFee.ToString("C") · Service fee: @Model.ServiceFee.ToString("C")</p>
+            @if (User.IsInRole(Roles.Guest)) { <a class="btn btn-danger w-100" asp-controller="Guest" asp-action="CreateBooking" asp-route-propertyId="@Model.Id">Reserve</a> }
+            else if (User.Identity?.IsAuthenticated == true) { <p class="mb-0 text-muted">Only Guest accounts can request a booking.</p> }
+            else { <a class="btn btn-danger w-100" asp-area="Identity" asp-page="/Account/Login">Sign in to reserve</a> }
+        </div></div>
+    </aside>
+</div>

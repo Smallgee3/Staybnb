@@ -1,0 +1,18 @@
+@model BookingInputModel
+@{ ViewData["Title"] = "Request booking"; var property = Model.Property!; }
+
+<div class="row justify-content-center"><div class="col-lg-8">
+    <h1>Request to book @property.Title</h1>
+    <p class="text-muted">@property.City · @property.PropertyType</p>
+    <form asp-action="CreateBooking" method="post" class="card card-body">
+        <input asp-for="PropertyId" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row g-3"><div class="col-md-4"><label asp-for="CheckInDate" class="form-label"></label><input asp-for="CheckInDate" class="form-control" /><span asp-validation-for="CheckInDate" class="text-danger"></span></div><div class="col-md-4"><label asp-for="CheckOutDate" class="form-label"></label><input asp-for="CheckOutDate" class="form-control" /><span asp-validation-for="CheckOutDate" class="text-danger"></span></div><div class="col-md-4"><label asp-for="TravelerCount" class="form-label"></label><input asp-for="TravelerCount" class="form-control" /><span asp-validation-for="TravelerCount" class="text-danger"></span></div></div>
+        <hr />
+        <h2 class="h5">Pricing formula</h2>
+        <p class="mb-1">Total price = (<strong>@property.PricePerNight.ToString("C") × number of nights</strong>) + @property.CleaningFee.ToString("C") cleaning fee + @property.ServiceFee.ToString("C") service fee.</p>
+        <p class="text-muted small">The exact total is calculated and persisted on the server after dates are validated.</p>
+        <button type="submit" class="btn btn-danger">Send booking request</button>
+    </form>
+</div></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

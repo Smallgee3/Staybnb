@@ -1,0 +1,23 @@
+@model HostApplicationInputModel
+@{ ViewData["Title"] = "Apply to host"; }
+
+<div class="row justify-content-center"><div class="col-lg-9">
+    <h1>Become a Staybnb Host</h1>
+    <p class="lead">Submit your first property for review. An administrator will review the listing and, if approved, your Guest role will be replaced by a Host role.</p>
+    <form asp-action="Apply" method="post" enctype="multipart/form-data" class="card card-body">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row g-3">
+            <div class="col-md-8"><label asp-for="Title" class="form-label"></label><input asp-for="Title" class="form-control" /><span asp-validation-for="Title" class="text-danger"></span></div>
+            <div class="col-md-4"><label asp-for="PropertyType" class="form-label"></label><input asp-for="PropertyType" class="form-control" placeholder="Apartment, House..." /><span asp-validation-for="PropertyType" class="text-danger"></span></div>
+            <div class="col-12"><label asp-for="Description" class="form-label"></label><textarea asp-for="Description" rows="5" class="form-control"></textarea><span asp-validation-for="Description" class="text-danger"></span></div>
+            <div class="col-md-6"><label asp-for="Address" class="form-label"></label><input asp-for="Address" class="form-control" /><span asp-validation-for="Address" class="text-danger"></span></div>
+            <div class="col-md-6"><label asp-for="City" class="form-label"></label><input asp-for="City" class="form-control" /><span asp-validation-for="City" class="text-danger"></span></div>
+            <div class="col-md-4"><label asp-for="PricePerNight" class="form-label"></label><input asp-for="PricePerNight" class="form-control" /><span asp-validation-for="PricePerNight" class="text-danger"></span></div>
+            <div class="col-md-4"><label asp-for="CleaningFee" class="form-label"></label><input asp-for="CleaningFee" class="form-control" /><span asp-validation-for="CleaningFee" class="text-danger"></span></div>
+            <div class="col-md-4"><label asp-for="ServiceFee" class="form-label"></label><input asp-for="ServiceFee" class="form-control" /><span asp-validation-for="ServiceFee" class="text-danger"></span></div>
+            <div class="col-12"><label asp-for="Images" class="form-label">Property images <span class="text-danger">(at least one is required)</span></label><input asp-for="Images" type="file" class="form-control" accept="image/jpeg,image/png,image/webp" multiple /><div class="form-text">JPG, PNG, or WebP; maximum 5 MB per file.</div><span asp-validation-for="Images" class="text-danger"></span></div>
+        </div>
+        <button class="btn btn-danger mt-4" type="submit">Submit application</button>
+    </form>
+</div></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

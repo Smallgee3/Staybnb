@@ -1,0 +1,6 @@
+@model List<ActivityLog>
+@{ ViewData["Title"] = "System audit log"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3"><h1>System audit log</h1><a class="btn btn-outline-secondary" asp-action="Dashboard">Back to admin centre</a></div>
+<p class="text-muted">Showing the most recent 250 security and workflow events.</p>
+<div class="table-responsive"><table class="table table-sm align-middle"><thead><tr><th>Timestamp</th><th>Action</th><th>User</th><th>Details</th><th>IP address</th></tr></thead><tbody>@foreach (var log in Model) { <tr><td>@log.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</td><td>@log.Action</td><td>@(log.UserEmail ?? log.UserId ?? "System")</td><td>@log.Details</td><td>@log.IpAddress</td></tr> }</tbody></table></div>

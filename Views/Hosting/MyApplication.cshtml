@@ -1,0 +1,18 @@
+@model HostApplication?
+@{ ViewData["Title"] = "My host application"; }
+
+<h1>My host application</h1>
+@if (Model is null)
+{
+    <div class="empty-state"><p>You have not submitted an application yet.</p><a class="btn btn-danger" asp-action="Apply">Apply to host</a></div>
+}
+else
+{
+    var badge = Model.Status == HostApplicationStatus.Approved ? "success" : Model.Status == HostApplicationStatus.Rejected ? "danger" : "warning";
+    <div class="card"><div class="card-body">
+        <div class="d-flex justify-content-between align-items-start"><div><h2 class="h4">@Model.Title</h2><p class="text-muted">Submitted @Model.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</p></div><span class="badge text-bg-@badge">@Model.Status</span></div>
+        <p>@Model.Description</p>
+        <dl class="row mb-0"><dt class="col-sm-3">Location</dt><dd class="col-sm-9">@Model.Address, @Model.City</dd><dt class="col-sm-3">Pricing</dt><dd class="col-sm-9">@Model.PricePerNight.ToString("C") per night; cleaning @Model.CleaningFee.ToString("C"); service @Model.ServiceFee.ToString("C")</dd><dt class="col-sm-3">Images</dt><dd class="col-sm-9">@Model.PropertyImages.Count file(s) attached</dd></dl>
+        @if (!string.IsNullOrWhiteSpace(Model.AdminComment)) { <div class="alert alert-secondary mt-3 mb-0"><strong>Administrator comment:</strong> @Model.AdminComment</div> }
+    </div></div>
+}

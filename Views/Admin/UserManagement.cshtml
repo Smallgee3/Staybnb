@@ -1,0 +1,7 @@
+@model List<ApplicationUser>
+@{ ViewData["Title"] = "User management"; var roles = (Dictionary<string, IList<string>>)ViewBag.UserRoles; }
+
+<div class="d-flex justify-content-between align-items-center mb-3"><h1>User management</h1><a class="btn btn-outline-secondary" asp-action="Dashboard">Back to admin centre</a></div>
+<p class="text-muted">Only a SuperAdmin may promote an existing Guest account to Administrator. Promoted accounts no longer retain Guest access.</p>
+<form method="get" class="row g-2 mb-4"><div class="col-md-8"><input class="form-control" name="query" value="@ViewBag.Query" placeholder="Search by name or email" /></div><div class="col-md-4"><button class="btn btn-danger" type="submit">Search users</button></div></form>
+<div class="table-responsive"><table class="table align-middle"><thead><tr><th>Name</th><th>Email</th><th>Roles</th><th>Registered</th><th>Action</th></tr></thead><tbody>@foreach (var user in Model) { var userRoles = roles[user.Id]; <tr><td>@user.FirstName @user.LastName</td><td>@user.Email</td><td>@string.Join(", ", userRoles)</td><td>@user.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</td><td>@if (userRoles.Contains(Roles.Guest)) { <form asp-action="PromoteToAdmin" method="post"><input type="hidden" name="id" value="@user.Id" /><button class="btn btn-sm btn-danger">Promote to Admin</button></form> } else { <span class="text-muted small">Not eligible</span> }</td></tr> }</tbody></table></div>

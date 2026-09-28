@@ -1,0 +1,6 @@
+@model List<Notification>
+@{ ViewData["Title"] = "Notifications"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3"><h1>Notifications</h1>@if (Model.Any(n => !n.IsRead)) { <form asp-action="MarkAllRead" method="post"><button class="btn btn-outline-secondary">Mark all as read</button></form> }</div>
+@if (!Model.Any()) { <div class="empty-state">You have no notifications.</div> }
+else { <div class="list-group">@foreach (var notification in Model) { <div class="list-group-item @(notification.IsRead ? "" : "list-group-item-light fw-semibold")"><div class="d-flex justify-content-between"><h2 class="h6 mb-1">@notification.Title</h2><small class="text-muted">@notification.CreatedAt.ToLocalTime().ToString("dd MMM HH:mm")</small></div><p class="mb-2">@notification.Message</p>@if (!notification.IsRead) { <form asp-action="MarkRead" method="post"><input type="hidden" name="id" value="@notification.Id" /><button class="btn btn-sm btn-danger">@(string.IsNullOrWhiteSpace(notification.Link) ? "Mark as read" : "View")</button></form> } else if (!string.IsNullOrWhiteSpace(notification.Link)) { <a class="small" href="@notification.Link">View related item</a> }</div> }</div> }

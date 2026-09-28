@@ -1,0 +1,6 @@
+@model List<UserMessage>
+@{ ViewData["Title"] = "Messages"; var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value; }
+
+<div class="d-flex justify-content-between align-items-center mb-3"><h1>Inbox</h1><a class="btn btn-danger" asp-action="Compose">Compose message</a></div>
+@if (!Model.Any()) { <div class="empty-state">Your inbox is empty.</div> }
+else { <div class="list-group">@foreach (var message in Model) { var incoming = message.RecipientId == userId; <a asp-action="Read" asp-route-id="@message.Id" class="list-group-item list-group-item-action @(incoming && !message.IsRead ? "fw-bold" : "")"><div class="d-flex justify-content-between"><span>@(incoming ? "From: " + message.Sender.FirstName + " " + message.Sender.LastName : "To: " + message.Recipient.FirstName + " " + message.Recipient.LastName)</span><small class="text-muted">@message.SentAt.ToLocalTime().ToString("dd MMM HH:mm")</small></div><div>@message.Subject</div><small class="text-muted">@(incoming && !message.IsRead ? "Unread" : "Read")</small></a> }</div> }
