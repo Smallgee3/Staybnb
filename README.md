@@ -70,8 +70,8 @@ On the first successful startup, the role seeder creates all four application ro
 
 | Field | Development value |
 |---|---|
-| Email | `superadmin@staybnb.local` |
-| Password | `ChangeThis!123` |
+| Email | `admin@gwanzi.local` |
+| Password | `Gwanyanya!03` |
 | Role | `SuperAdmin` |
 
 Change these values in `appsettings.json` for your submission demonstration if you need different credentials. Do not use the sample password outside a local demonstration environment.
